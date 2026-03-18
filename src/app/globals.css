@@ -1,0 +1,47 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    @apply antialiased;
+  }
+  body {
+    @apply bg-bg text-white min-h-screen;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl font-semibold transition-all duration-200 active:scale-[0.98];
+  }
+  .btn-primary {
+    @apply btn bg-accent text-black hover:bg-accent-hover shadow-glow-sm hover:shadow-glow px-6 py-3;
+  }
+  .btn-ghost {
+    @apply btn border border-bg-border bg-transparent text-muted-foreground hover:bg-bg-card hover:text-white hover:border-bg-borderHover px-5 py-2.5;
+  }
+  .card {
+    @apply rounded-2xl bg-bg-card border border-bg-border shadow-card p-6 transition-all duration-200;
+  }
+  .card-hover {
+    @apply card hover:border-bg-borderHover hover:shadow-card-hover;
+  }
+  .input {
+    @apply w-full rounded-xl border border-bg-border bg-bg-surface px-4 py-3 text-white placeholder:text-muted focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/50 transition-colors;
+  }
+  .badge {
+    @apply inline-flex items-center rounded-lg px-2.5 py-0.5 text-xs font-semibold;
+  }
+  .badge-verified {
+    @apply badge bg-accent-muted text-accent;
+  }
+  .container-custom {
+    @apply mx-auto max-w-6xl px-4 sm:px-6 lg:px-8;
+  }
+}
+
+/* Star rating color */
+.star {
+  @apply text-gold;
+}
