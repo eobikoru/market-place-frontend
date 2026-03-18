@@ -45,7 +45,7 @@ export default function AdminVerifyPage() {
               <div className="min-w-0">
                 <p className="font-semibold text-white">{String(w.name)}</p>
                 <p className="text-sm text-muted">{String(w.email)} · {String(w.service_name)}</p>
-                {w.id_document_url && (
+                {w.id_document_url ? (
                   <a
                     href={String(w.id_document_url)}
                     target="_blank"
@@ -54,7 +54,7 @@ export default function AdminVerifyPage() {
                   >
                     View ID document →
                   </a>
-                )}
+                ) : null}
               </div>
               <div className="flex gap-2">
                 <button

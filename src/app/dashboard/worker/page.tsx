@@ -82,9 +82,9 @@ export default function WorkerDashboardPage() {
                     <p className="text-sm text-muted-foreground mt-1">
                       {new Date(String(j.scheduled_at)).toLocaleString()} · ₦{Number(j.price).toLocaleString()}
                     </p>
-                    {j.notes && (
+                    {j.notes ? (
                       <p className="text-sm text-muted mt-1 italic">&ldquo;{String(j.notes)}&rdquo;</p>
-                    )}
+                    ) : null}
                   </div>
                   <div className="flex flex-wrap items-center gap-2">
                     <span className={`badge ${statusStyles[status] || 'bg-bg-border text-muted'}`}>
