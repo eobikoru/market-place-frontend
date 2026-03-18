@@ -12,12 +12,17 @@ export default function RegisterPage() {
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [role, setRole] = useState<'customer' | 'worker'>('customer');
+  const [termsAccepted, setTermsAccepted] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError('');
+    if (!termsAccepted) {
+      setError('You must accept the Terms of Service and Privacy Policy.');
+      return;
+    }
     setLoading(true);
     try {
       const { token } = await auth.register({
@@ -26,6 +31,7 @@ export default function RegisterPage() {
         password,
         phone: phone || undefined,
         role,
+        terms_accepted: true,
       });
       localStorage.setItem('helpme_token', token);
       router.push(role === 'worker' ? '/dashboard/worker' : '/dashboard');
@@ -99,6 +105,26 @@ export default function RegisterPage() {
                 minLength={8}
                 required
               />
+            </div>
+            <div className="flex items-start gap-3">
+              <input
+                type="checkbox"
+                id="terms"
+                checked={termsAccepted}
+                onChange={(e) => setTermsAccepted(e.target.checked)}
+                className="mt-1 rounded border-bg-border"
+              />
+              <label htmlFor="terms" className="text-sm text-muted-foreground">
+                I accept the{' '}
+                <Link href="/terms" className="text-accent hover:underline" target="_blank" rel="noopener noreferrer">
+                  Terms of Service
+                </Link>{' '}
+                and{' '}
+                <Link href="/privacy" className="text-accent hover:underline" target="_blank" rel="noopener noreferrer">
+                  Privacy Policy
+                </Link>
+                .
+              </label>
             </div>
             {error && (
               <p className="text-danger text-sm bg-danger/10 rounded-xl px-3 py-2">{error}</p>

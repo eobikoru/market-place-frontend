@@ -24,7 +24,14 @@ export async function api<T>(
 }
 
 export const auth = {
-  register: (body: { name: string; email: string; password: string; phone?: string; role?: string }) =>
+  register: (body: {
+    name: string;
+    email: string;
+    password: string;
+    phone?: string;
+    role?: string;
+    terms_accepted?: boolean;
+  }) =>
     api<{ user: unknown; token: string }>('/api/v1/auth/register', { method: 'POST', body: JSON.stringify(body) }),
   login: (body: { email: string; password: string }) =>
     api<{ user: unknown; token: string }>('/api/v1/auth/login', { method: 'POST', body: JSON.stringify(body) }),
@@ -57,7 +64,16 @@ export const workers = {
     return api<Array<Record<string, unknown>>>(`/api/v1/workers?${q}`);
   },
   get: (id: string) => api<Record<string, unknown>>(`/api/v1/workers/${id}`),
-  apply: (body: { service_category_id: string; bio?: string; price_min: number; price_max?: number }, token: string) =>
+  apply: (
+    body: {
+      service_category_id: string;
+      bio?: string;
+      price_min: number;
+      price_max?: number;
+      id_document_url?: string;
+    },
+    token: string
+  ) =>
     api<unknown>('/api/v1/workers/apply', { method: 'POST', body: JSON.stringify(body), token }),
 };
 
@@ -90,6 +106,12 @@ export const bookings = {
       body: JSON.stringify({ status }),
       token,
     }),
+  cancel: (id: string, token: string) =>
+    api<Record<string, unknown>>(`/api/v1/bookings/${id}/status`, {
+      method: 'PATCH',
+      body: JSON.stringify({ status: 'cancelled' }),
+      token,
+    }),
   review: (id: string, body: { rating: number; comment?: string }, token: string) =>
     api<{ ok: boolean }>(`/api/v1/bookings/${id}/review`, { method: 'POST', body: JSON.stringify(body), token }),
 };
@@ -107,4 +129,30 @@ export const payments = {
       token,
     }),
   wallet: (token: string) => api<{ balance: number }>('/api/v1/payments/wallet', { token }),
+};
+
+export const notifications = {
+  list: (token: string) =>
+    api<Array<{ id: string; type: string; title: string; body?: string; read_at?: string; created_at: string }>>(
+      '/api/v1/notifications',
+      { token }
+    ),
+  markRead: (id: string, token: string) =>
+    api<{ ok: boolean }>(`/api/v1/notifications/${id}/read`, {
+      method: 'PATCH',
+      token,
+    }),
+};
+
+export const admin = {
+  workers: (token: string) =>
+    api<Array<Record<string, unknown>>>('/api/v1/admin/workers', { token }),
+  workersPendingVerification: (token: string) =>
+    api<Array<Record<string, unknown>>>('/api/v1/admin/workers/pending-verification', { token }),
+  workerIdVerify: (workerId: string, idVerified: boolean, token: string) =>
+    api<{ ok: boolean }>(`/api/v1/admin/workers/${workerId}/id-verify`, {
+      method: 'PATCH',
+      body: JSON.stringify({ id_verified: idVerified }),
+      token,
+    }),
 };

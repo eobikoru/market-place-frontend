@@ -19,7 +19,11 @@ export default function LoginPage() {
     try {
       const { token } = await auth.login({ email, password });
       localStorage.setItem('helpme_token', token);
-      router.push('/dashboard');
+      const user = await auth.me(token);
+      const role = (user as { role?: string }).role;
+      if (role === 'admin') router.push('/dashboard/admin');
+      else if (role === 'worker') router.push('/dashboard/worker');
+      else router.push('/dashboard');
       router.refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Login failed');

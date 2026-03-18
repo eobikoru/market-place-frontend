@@ -41,8 +41,9 @@ export default function DashboardLayout({
   }
 
   const isWorker = user.role === 'worker';
-  const navHref = isWorker ? '/dashboard/worker' : '/dashboard';
-  const navLabel = isWorker ? 'My jobs' : 'My bookings';
+  const isAdmin = user.role === 'admin';
+  const navHref = isAdmin ? '/dashboard/admin' : isWorker ? '/dashboard/worker' : '/dashboard';
+  const navLabel = isAdmin ? 'Admin' : isWorker ? 'Appointments' : 'My bookings';
 
   return (
     <div className="min-h-screen flex flex-col bg-bg bg-gradient-mesh">
@@ -59,6 +60,24 @@ export default function DashboardLayout({
               }`}
             >
               {navLabel}
+            </Link>
+            {isAdmin && (
+              <Link
+                href="/dashboard/admin/verify"
+                className={`text-sm font-medium transition-colors ${
+                  pathname === '/dashboard/admin/verify' ? 'text-accent' : 'text-muted hover:text-white'
+                }`}
+              >
+                Verify ID
+              </Link>
+            )}
+            <Link
+              href="/dashboard/notifications"
+              className={`text-sm font-medium transition-colors ${
+                pathname === '/dashboard/notifications' ? 'text-accent' : 'text-muted hover:text-white'
+              }`}
+            >
+              Notifications
             </Link>
             <span className="text-sm text-muted">{user.name}</span>
             <button
